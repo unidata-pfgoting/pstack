@@ -8,9 +8,11 @@ description: Configure which models pstack uses per role and at what reasoning b
 Write pstack's model settings, one model per role:
 
 - **Cursor:** `~/.cursor/rules/pstack-models.mdc`, an always-applied rule.
-- **Every other harness** (Claude Code, Codex, Pi, OpenCode, and others): `~/.agents/pstack-models.md`. These harnesses don't load Cursor rules, so pstack skills read this file when they pick a model.
+- **Codex:** `~/.agents/pstack-models.codex.md`.
+- **Claude Code:** `~/.agents/pstack-models.claude-code.md`.
+- **Pi, OpenCode, and other harnesses:** `~/.agents/pstack-models.md`.
 
-"The settings file" below means the file for your harness. When reading, check both paths and use the one that exists.
+"The settings file" below means the file for your harness. Read that file first. If it does not exist, read `~/.agents/pstack-models.md` as the fallback. Do not read another harness's file.
 
 ## Steps
 
@@ -20,7 +22,7 @@ Enumerate the model slugs you can pass to a subagent in this session (Cursor `Ta
 
 ### 2. Load current state
 
-The default role-to-model mapping is the rule shape shown in step 5 below. If the settings file already exists, read it and treat its `# budget` line and its role values as the current choices. Otherwise start from those defaults.
+The default role-to-model mapping is the rule shape shown in step 5 below. If the harness-specific file exists, read it and treat its `# budget` line and role values as the current choices. Otherwise read the shared fallback. If neither exists, start from the defaults.
 
 ### 3. Budget, map, and confirm
 
@@ -41,7 +43,7 @@ Every real slug written must be in the detected set. `inherit-parent` and `auto`
 
 ### 5. Write the rule
 
-Write the settings file with a `# budget` line with the chosen label and its target effort, and one line per role, using the same labels poteto-mode uses. In Cursor, include the frontmatter below with `alwaysApply: true`. In other harnesses, write `~/.agents/pstack-models.md` without the frontmatter (start at the first `#` line). Overwrite the whole file so re-runs stay idempotent. Shape:
+Write the file for the current harness with a `# budget` line with the chosen label and its target effort, and one line per role, using the same labels poteto-mode uses. In Cursor, include the frontmatter below with `alwaysApply: true`. In other harnesses, omit the frontmatter (start at the first `#` line). If the current choices came from the shared fallback, write them to the harness-specific file and leave the fallback unchanged. Overwrite the target file so re-runs stay idempotent. Shape:
 
 ```
 ---
@@ -72,7 +74,7 @@ interrogate reviewers: claude-fable-5-1-thinking-max, gpt-5.6-sol-max, grok-4.6-
 
 ### 6. Confirm
 
-Tell the user which file was written. In Cursor, the rule applies to new sessions. In other harnesses, pstack skills read `~/.agents/pstack-models.md` when they pick a model. Re-running this skill updates it.
+Tell the user which file was written. In Cursor, the rule applies to new sessions. In other harnesses, pstack skills read the harness-specific file first and the shared fallback if it is absent. Re-running this skill updates the current harness's file.
 
 ### 7. Offer a verification skill (optional)
 

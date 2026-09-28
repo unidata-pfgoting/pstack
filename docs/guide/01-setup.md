@@ -20,7 +20,7 @@ Run:
 /setup-pstack
 ```
 
-[`/setup-pstack`](../../skills/setup-pstack/SKILL.md) detects the models you have access to, asks for a reasoning budget, shows you each role (code delegates, judgment, the review panels), and asks what you want. Answer the questions. It writes `~/.cursor/rules/pstack-models.mdc`, a small rule every pstack skill reads.
+[`/setup-pstack`](../../skills/setup-pstack/SKILL.md) detects the models you have access to, asks for a reasoning budget, shows you each role (code delegates, judgment, the review panels), and asks what you want. Answer the questions. It writes a settings file for your harness: `~/.cursor/rules/pstack-models.mdc` in Cursor, `~/.agents/pstack-models.codex.md` in Codex, or `~/.agents/pstack-models.claude-code.md` in Claude Code. Pi, OpenCode, and other harnesses use `~/.agents/pstack-models.md`. If a harness-specific file is absent, pstack reads the shared file as a fallback.
 
 You only override what you care about. A role with no line in the rule keeps the skill's default. To restore a default later, delete that role's line, or just run `/setup-pstack` again.
 
